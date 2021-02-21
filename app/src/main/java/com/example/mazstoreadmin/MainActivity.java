@@ -19,4 +19,16 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,MainActivity_AddUser.class);
         startActivity(intent);
     }
+
+    public void enviarRepartidor(View view)
+    {
+        Intent intent =new Intent(this,MainActivity_AddUserRepartidor.class);
+        startActivity(intent);
+    }
+
+    public void enviarRegistroRest(View view)
+    {
+        Intent intent =new Intent(this,MainActivity_AddUserRestaurante.class);
+        startActivity(intent);
+    }
 }
