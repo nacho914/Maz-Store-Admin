@@ -9,19 +9,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#DFDFDF"
+        android:gravity="center_horizontal|top|center_vertical"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="1sp"
-            android:layout_marginLeft="1sp"
-            android:layout_marginEnd="1sp"
-            android:layout_marginRight="1sp"
-            android:gravity="center"
-            android:text="Hello World!"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="310dp"
+            android:layout_height="226dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:srcCompat="@drawable/mazreparto2" />
 
         <Button
             android:id="@+id/button"
@@ -43,6 +41,13 @@
             android:layout_height="wrap_content"
             android:onClick="enviarRegistroRest"
             android:text="Registrar Restaurante" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="cerrarSesion"
+            android:text="Cerrar Sesión" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

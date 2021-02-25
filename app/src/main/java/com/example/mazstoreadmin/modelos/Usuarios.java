@@ -10,18 +10,19 @@ public class Usuarios {
     public String Nombre;
     public String Correo;
     public String Password;
-    public String TipoUsuario;
-    public int IdTipoUsuario;
     public  String keyNotificaciones;
     HashMap<String, Object> timestampCreated;
 
-    public Usuarios(String sNombre, String sCorreo, String sPassword, String sTipoUsuario, int iTipoUsuario,String sKey)
+    public Usuarios()
+    {
+
+    }
+
+    public Usuarios(String sNombre, String sCorreo, String sPassword,String sKey)
     {
         Nombre=sNombre;
         Correo=sCorreo;
         Password=sPassword;
-        TipoUsuario=sTipoUsuario;
-        IdTipoUsuario=iTipoUsuario;
         keyNotificaciones=sKey;
 
         HashMap<String, Object> timestampNow = new HashMap<>();

@@ -1,33 +1,28 @@
 package com.example.mazstoreadmin;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.RemoteInput;
-import androidx.fragment.app.DialogFragment;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.example.mazstoreadmin.modelos.Usuarios;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.mazstoreadmin.modelos.UsuariosRepartidores;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 public class MainActivity_AddUserRepartidor extends AppCompatActivity {
 
@@ -41,6 +36,9 @@ public class MainActivity_AddUserRepartidor extends AppCompatActivity {
     EditText correo;
     EditText contra;
     EditText nombreSeguro;
+    Button   BotonCrear;
+
+    private ProgressDialog progressDialog;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference("Usuarios/UsuariosRepartidores");
@@ -52,6 +50,8 @@ public class MainActivity_AddUserRepartidor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__add_user_repartidor);
 
+        progressDialog = new ProgressDialog(this);
+
         fechaLicencia =findViewById(R.id.mFechaLicencia);
         fechaSeguro=findViewById(R.id.mFechaSeguro);
         nombre=findViewById(R.id.mNombre);
@@ -61,6 +61,7 @@ public class MainActivity_AddUserRepartidor extends AppCompatActivity {
         correo=findViewById(R.id.mCorreo);
         contra=findViewById(R.id.mContra);
         nombreSeguro=findViewById(R.id.mNombreSeguro);
+        BotonCrear=findViewById(R.id.btnCrearUsuario);
 
 
         addEscuchadores();
@@ -72,70 +73,66 @@ public class MainActivity_AddUserRepartidor extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     public void addEscuchadores()
     {
-        fechaLicencia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(MainActivity_AddUserRepartidor.this,android.R.style.Theme_Holo_Dialog,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                fechaLicencia.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, year, month, day);
-                picker.show();
-            }
+        fechaLicencia.setOnClickListener(v -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(MainActivity_AddUserRepartidor.this,android.R.style.Theme_Holo_Dialog,
+                    (view, year1, monthOfYear, dayOfMonth) -> fechaLicencia.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
+            picker.show();
         });
 
-        fechaSeguro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(MainActivity_AddUserRepartidor.this,android.R.style.Theme_Holo_Dialog,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                fechaSeguro.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, year, month, day);
-                picker.show();
-            }
+        fechaSeguro.setOnClickListener(v -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(MainActivity_AddUserRepartidor.this,android.R.style.Theme_Holo_Dialog,
+                    (view, year12, monthOfYear, dayOfMonth) -> fechaSeguro.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year12), year, month, day);
+            picker.show();
         });
     }
 
     public void CreateUser(View view)
     {
-        if(!correo.getText().toString().isEmpty() && !contra.getText().toString().isEmpty()) {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), contra.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (task.isSuccessful()) {
-                        agregarBaseDatos();
-                    }
+        progressDialog.setTitle("Maz Reparto");
+        progressDialog.setMessage("Creando usuario");
+        progressDialog.show();
 
-                    else {
+        if(isInternetAvailable()) {
+            if (validarDatos()) {
+                if (!correo.getText().toString().isEmpty() && !contra.getText().toString().isEmpty()) {
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), contra.getText().toString()).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            agregarBaseDatos();
+                        } else {
 
-                        mostrarDialogo("Registro",task.getException().toString());
-                    }
+                            mostrarDialogo("Registro", Objects.requireNonNull(task.getException()).toString(), false);
+                            progressDialog.dismiss();
+                        }
 
+                    });
+                } else {
+                    mostrarDialogo("Registro", "Favor de ingresar correo y contraseña", false);
+                    progressDialog.dismiss();
                 }
-            });
+            } else {
+                progressDialog.dismiss();
+            }
         }
         else
         {
-            mostrarDialogo("Registro","Favor de ingresar correo y contraseña");
+            progressDialog.dismiss();
+            mostrarDialogo("Registro","Lo sentimos no encontramos internet disponible",true);
         }
+
     }
 
     public void agregarBaseDatos()
@@ -145,8 +142,8 @@ public class MainActivity_AddUserRepartidor extends AppCompatActivity {
         UsuariosRepartidores usuario = llenarUsuario();
 
         NewUserPush.setValue(usuario);
-
-        mostrarDialogo("Registro","Tu registro fue correctamente realizado ");
+        progressDialog.dismiss();
+        mostrarDialogo("Registro","Tu registro fue correctamente realizado ",true);
 
     }
 
@@ -164,22 +161,55 @@ public class MainActivity_AddUserRepartidor extends AppCompatActivity {
         String sFechaLic = fechaLicencia.getText().toString();
         String sFechaSeg = fechaSeguro.getText().toString();
 
-        UsuariosRepartidores usuario = new UsuariosRepartidores(sNombre, sFechaLic, sDomi, lTele, tipoSangre,lTelEmer,sCorreo,sPassword,sNombreSeguro,sFechaSeg,"");
-
-        return usuario;
+        return new UsuariosRepartidores(sNombre, sFechaLic, sDomi, lTele, tipoSangre,lTelEmer,sCorreo,sPassword,sNombreSeguro,sFechaSeg,"");
     }
 
-    public  void mostrarDialogo(String sTitulo, String sMensaje)
+
+    public Boolean validarDatos()
+    {
+        boolean bRegresa=false;
+
+        if(fechaLicencia.getText().toString().isEmpty() || fechaSeguro.getText().toString().isEmpty() || nombre.getText().toString().isEmpty()
+                || nombre.getText().toString().isEmpty() || domicilio.getText().toString().isEmpty() || telefono.getText().toString().isEmpty()
+                || teleEmer.getText().toString().isEmpty() || correo.getText().toString().isEmpty() || contra.getText().toString().isEmpty()
+                ||nombreSeguro.getText().toString().isEmpty() || sTipoSangre.getSelectedItemId()==0 )
+        {
+            mostrarDialogo("Registro","Favor de validar que haya agregado todos los datos",false);
+        }
+        else
+        {
+            bRegresa=true;
+        }
+
+        return bRegresa;
+    }
+
+
+    public  void mostrarDialogo(String sTitulo, String sMensaje,boolean bFinaliza)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(sTitulo);
         builder.setMessage(sMensaje);
-        //builder.setPositiveButton("OK", null);
-        builder.setNeutralButton("Entendido",null);
+        if(bFinaliza)
+        {builder.setNeutralButton("Entendido", (dialog, which) -> {
+            Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+        });
+
+        }
+        else {
+            builder.setNeutralButton("Entendido", null);
+        }
         builder.setInverseBackgroundForced(true);
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
 }

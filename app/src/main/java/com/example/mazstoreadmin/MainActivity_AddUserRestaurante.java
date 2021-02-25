@@ -1,6 +1,10 @@
 package com.example.mazstoreadmin;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class MainActivity_AddUserRestaurante extends AppCompatActivity {
 
     Spinner sHoraInicia;
@@ -24,6 +30,8 @@ public class MainActivity_AddUserRestaurante extends AppCompatActivity {
     EditText correo;
     EditText contra;
 
+    private ProgressDialog progressDialog;
+
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference("Usuarios/UsuariosRestaurantes");
@@ -32,6 +40,8 @@ public class MainActivity_AddUserRestaurante extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__add_user_restaurante);
+
+        progressDialog = new ProgressDialog(this);
 
         sHoraInicia = findViewById(R.id.sHoraInicia);
         sHoraFin = findViewById(R.id.sHoraFin);
@@ -67,23 +77,34 @@ public class MainActivity_AddUserRestaurante extends AppCompatActivity {
 
     public void CreateUser(View view)
     {
-        if(!correo.getText().toString().isEmpty() && !contra.getText().toString().isEmpty()) {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), contra.getText().toString()).addOnCompleteListener(task -> {
+        progressDialog.setTitle("Maz Reparto");
+        progressDialog.setMessage("Creando usuario");
+        progressDialog.show();
 
-                if (task.isSuccessful()) {
-                    agregarBaseDatos();
+        if(isInternetAvailable()) {
+            if (validarDatos()) {
+                if (!correo.getText().toString().isEmpty() && !contra.getText().toString().isEmpty()) {
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), contra.getText().toString()).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            agregarBaseDatos();
+                        } else {
+                            progressDialog.dismiss();
+                            mostrarDialogo("Registro", Objects.requireNonNull(task.getException()).toString(), false);
+                        }
+
+                    });
+                } else {
+                    progressDialog.dismiss();
+                    mostrarDialogo("Registro", "Favor de ingresar correo y contraseña", false);
                 }
-
-                else {
-
-                    mostrarDialogo("Registro",task.getException().toString());
-                }
-
-            });
+            } else {
+                progressDialog.dismiss();
+            }
         }
         else
         {
-            mostrarDialogo("Registro","Favor de ingresar correo y contraseña");
+            progressDialog.dismiss();
+            mostrarDialogo("Registro","Lo sentimos no encontramos internet disponible",true);
         }
     }
 
@@ -95,7 +116,8 @@ public class MainActivity_AddUserRestaurante extends AppCompatActivity {
 
         NewUserPush.setValue(usuario);
 
-        mostrarDialogo("Registro","Tu registro fue correctamente realizado ");
+        progressDialog.dismiss();
+        mostrarDialogo("Registro","Tu registro fue correctamente realizado ",true);
 
     }
 
@@ -113,16 +135,50 @@ public class MainActivity_AddUserRestaurante extends AppCompatActivity {
         return new UsuariosRestaurantes(sNombre, sDomi, lTele, sCorreo, sPassword,sHoraIni,sHoraFinal,"");
     }
 
-    public  void mostrarDialogo(String sTitulo, String sMensaje)
+    public Boolean validarDatos()
+    {
+        boolean bRegresa=false;
+
+        if(nombre.getText().toString().isEmpty() || domicilio.getText().toString().isEmpty() || telefono.getText().toString().isEmpty()
+            ||correo.getText().toString().isEmpty() || contra.getText().toString().isEmpty() || (sHoraInicia.getSelectedItemId()>sHoraFin.getSelectedItemId()))
+
+        {
+            mostrarDialogo("Registro","Favor de validar que los datos sean correctos",false);
+        }
+        else
+        {
+            bRegresa=true;
+        }
+
+        return bRegresa;
+    }
+
+
+    public  void mostrarDialogo(String sTitulo, String sMensaje,boolean bFinaliza)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(sTitulo);
         builder.setMessage(sMensaje);
         //builder.setPositiveButton("OK", null);
-        builder.setNeutralButton("Entendido",null);
+        if(bFinaliza)
+        {builder.setNeutralButton("Entendido", (dialog, which) -> {
+            Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+        });
+
+        }
+        else {
+            builder.setNeutralButton("Entendido", null);
+        }
         builder.setInverseBackgroundForced(true);
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 }
