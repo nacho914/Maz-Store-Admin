@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.mazstoreadmin.modelos.MainActivity_Login;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {

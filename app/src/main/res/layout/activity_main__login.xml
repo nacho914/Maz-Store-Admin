@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
     android:background="#DFDFDF"
-    tools:context=".modelos.MainActivity_Login">
+    tools:context=".MainActivity_AddUser$MainActivity_Login">
 
     <LinearLayout
         android:layout_width="match_parent"
