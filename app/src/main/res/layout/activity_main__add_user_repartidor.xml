@@ -118,6 +118,16 @@
                 android:hint="Correo"
                 android:inputType="textEmailAddress" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:passwordToggleEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
             <EditText
                 android:id="@+id/mContra"
                 android:layout_width="match_parent"
@@ -128,6 +138,8 @@
                 android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
                 android:id="@+id/mNombreSeguro"

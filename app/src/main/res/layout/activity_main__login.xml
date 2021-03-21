@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
     android:background="#DFDFDF"
-    tools:context=".MainActivity_AddUser$MainActivity_Login">
+    tools:context=".MainActivity_Login">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,8 @@
             android:layout_height="206dp"
             app:srcCompat="@drawable/mazreparto2"
             android:layout_marginTop="14dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:contentDescription="TODO" />
 
         <EditText
             android:id="@+id/m_username"
@@ -33,7 +34,8 @@
             android:layout_marginEnd="24dp"
             android:hint="Correo"
             android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true" />
+            android:selectAllOnFocus="true"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/m_password"
@@ -46,7 +48,8 @@
             android:imeActionLabel="Contraseña"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
+            android:selectAllOnFocus="true"
+            android:autofillHints="" />
 
         <Button
             android:id="@+id/login"

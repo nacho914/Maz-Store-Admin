@@ -147,7 +147,10 @@ public class MainActivity_AddUserRestaurante extends AppCompatActivity {
         }
         else
         {
-            bRegresa=true;
+            if(telefono.getText().toString().length()==10)
+                bRegresa=true;
+            else
+                mostrarDialogo("Registro","El telefono debe tener 10 digitos.",false);
         }
 
         return bRegresa;
