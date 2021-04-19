@@ -159,16 +159,26 @@ public class MainActivity_Login extends AppCompatActivity {
             // Get new FCM registration token
             String token = task.getResult();
             ref.child(key).child("keyNotificaciones").setValue(token);
-
-            progressDialog.dismiss();
-            Intent intent = new Intent(MainActivity_Login.this, MainActivity.class);
-            intent.putExtra("KeyTrabajador", key);
-            startActivity(intent);
+            suscribirNotificaciones(key);
 
         });
 
     }
 
+    public void suscribirNotificaciones(String key)
+    {
+        FirebaseMessaging.getInstance().subscribeToTopic("NotificacionesPedidosAdministradores").addOnCompleteListener(task -> {
+           //String msg = "Suscrito";
+           /* if (!task.isSuccessful()) {
+             //   msg = "Fallamos";
+            }*/
+
+            progressDialog.dismiss();
+            Intent intent = new Intent(MainActivity_Login.this, MainActivity.class);
+            intent.putExtra("KeyTrabajador", key);
+            startActivity(intent);
+        });
+    }
 
     public  void mostrarDialogo(String sTitulo, String sMensaje)
     {
