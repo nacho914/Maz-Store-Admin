@@ -12,6 +12,9 @@
         android:roundIcon="@mipmap/iconadmin"
         android:supportsRtl="true"
         android:theme="@style/Theme.MazStoreAdmin">
+        <activity android:name=".MainActivity_confirma"></activity>
+        <activity android:name=".MainActivity_repartidores" />
+        <activity android:name=".MainActivity_Pedidos" />
         <activity android:name=".MainActivity_Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +27,6 @@
         <activity android:name=".MainActivity_AddUserRepartidor" />
         <activity android:name=".MainActivity_AddUser" />
         <activity android:name=".MainActivity" />
-
     </application>
 
 </manifest>

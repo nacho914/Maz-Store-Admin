@@ -21,6 +21,9 @@ public class UsuariosRepartidores {
     public  String keyNotificaciones;
     HashMap<String, Object> timestampCreated;
 
+    public UsuariosRepartidores()
+    { }
+
     public UsuariosRepartidores(String sNombre,String sFechaLicencia,String sDomicilio,long lTele,String sTipoSangre,long lTeleEmer, String sCorreo,
                                 String sPassword,String sNombreSeguro,String sFechaSeguro,String sKey)
     {

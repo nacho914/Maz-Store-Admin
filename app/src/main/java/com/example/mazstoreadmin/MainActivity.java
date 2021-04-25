@@ -42,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void enviarListadoPedidos(View view)
+    {
+        Intent intent =new Intent(this,MainActivity_Pedidos.class);
+        startActivity(intent);
+    }
+
     public void cerrarSesion(View view)
     {
         FirebaseAuth.getInstance().signOut();
