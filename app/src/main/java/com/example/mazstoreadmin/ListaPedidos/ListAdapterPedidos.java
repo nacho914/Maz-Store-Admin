@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mazstoreadmin.MainActivity_confirma;
+import com.example.mazstoreadmin.MainActivity_detallesPedidos;
 import com.example.mazstoreadmin.MainActivity_repartidores;
 import com.example.mazstoreadmin.R;
 
@@ -119,7 +120,8 @@ public class ListAdapterPedidos  extends RecyclerView.Adapter<ListAdapterPedidos
 
             itemView.setOnClickListener(v -> {
                 if(item.tipoPedido == 0) {
-                    Intent intent = new Intent(context, MainActivity_repartidores.class);
+                    //Intent intent = new Intent(context, MainActivity_repartidores.class);
+                    Intent intent = new Intent(context, MainActivity_detallesPedidos.class);
                     Bundle extras = new Bundle();
                     extras.putString("keyPedido", item.PedidoKey);
                     extras.putString("keyRestaurante", item.RestauranteKey);

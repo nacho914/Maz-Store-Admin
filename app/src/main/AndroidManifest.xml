@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/iconadmin"
         android:supportsRtl="true"
         android:theme="@style/Theme.MazStoreAdmin">
-        <activity android:name=".MainActivity_confirma"></activity>
+        <activity android:name=".MainActivity_detallesPedidos"></activity>
+        <activity android:name=".MainActivity_confirma" />
         <activity android:name=".MainActivity_repartidores" />
         <activity android:name=".MainActivity_Pedidos" />
         <activity android:name=".MainActivity_Splash">
