@@ -16,6 +16,9 @@ public class UsuariosRestaurantes {
     public  String keyNotificaciones;
     HashMap<String, Object> timestampCreated;
 
+    public UsuariosRestaurantes()
+    {}
+
     public UsuariosRestaurantes(String sNombre,String sDomicilio,long lTele, String sCorreo,
                                 String sPassword,String shoraInicio,String sHoraFin,String sKey)
     {

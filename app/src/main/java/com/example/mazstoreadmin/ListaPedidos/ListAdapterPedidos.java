@@ -125,6 +125,7 @@ public class ListAdapterPedidos  extends RecyclerView.Adapter<ListAdapterPedidos
                     Bundle extras = new Bundle();
                     extras.putString("keyPedido", item.PedidoKey);
                     extras.putString("keyRestaurante", item.RestauranteKey);
+                    extras.putInt("tipoPedido", item.tipoPedido);
                     intent.putExtras(extras);
                     context.startActivity(intent);
                 }
@@ -135,6 +136,16 @@ public class ListAdapterPedidos  extends RecyclerView.Adapter<ListAdapterPedidos
                     extras.putString("keyPedido", item.PedidoKey);
                     extras.putString("keyRestaurante", item.RestauranteKey);
                     extras.putInt("tipoPedido",item.tipoPedido);
+                    intent.putExtras(extras);
+                    context.startActivity(intent);
+                }
+                else if(item.tipoPedido==2)
+                {
+                    Intent intent = new Intent(context, MainActivity_detallesPedidos.class);
+                    Bundle extras = new Bundle();
+                    extras.putString("keyPedido", item.PedidoKey);
+                    extras.putString("keyRestaurante", item.RestauranteKey);
+                    extras.putInt("tipoPedido", item.tipoPedido);
                     intent.putExtras(extras);
                     context.startActivity(intent);
                 }

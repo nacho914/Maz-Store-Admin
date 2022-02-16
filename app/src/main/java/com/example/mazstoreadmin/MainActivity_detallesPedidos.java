@@ -1,10 +1,6 @@
 package com.example.mazstoreadmin;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -13,6 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mazstoreadmin.modelos.Pedidos;
 import com.example.mazstoreadmin.modelos.UsuariosRestaurantes;
@@ -49,6 +48,7 @@ public class MainActivity_detallesPedidos extends AppCompatActivity {
     DatabaseReference ref = database.getReference("Pedidos");
     DatabaseReference refTrabajador = database.getReference("Usuarios/UsuariosRepartidores");
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +57,7 @@ public class MainActivity_detallesPedidos extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         key = extras.getString("keyPedido");
         keyRestaurante = extras.getString("keyRestaurante");
-        iTipoPedido =0;
+        iTipoPedido=extras.getInt("tipoPedido");
 
         mNombreNego=findViewById(R.id.mNombreNegocio);
         mNombreCliente=findViewById(R.id.mNombreCliente);
@@ -78,12 +78,12 @@ public class MainActivity_detallesPedidos extends AppCompatActivity {
         {
             ref.child("Activos").child(key).addValueEventListener(returnListener());
         }
-        if(iTipoPedido == 1)
+        else if(iTipoPedido == 1)
         {
             bEsApartado=true;
             ref.child("Activos").child(key).addValueEventListener(returnListener());
         }
-        if(iTipoPedido == 2) {
+        else if(iTipoPedido == 2) {
             mActualiza.setEnabled(false);
             mActualiza.setText("Pedido Finalizado");
             ref.child("Finalizados").child(key).addValueEventListener(returnListener());
